@@ -1,23 +1,16 @@
-# Zeabur service definitions
+# https://zeabur.com/docs/deploy/config
 services:
-  # Backend service
   backend:
     build:
-      # Use backend folder
-      src: ./backend
-      command: pip install -r requirements.txt
-      output: .
-    run:
-      # Start command
-      command: uvicorn main:app --host 0.0.0.0 --port 8000
-      port: 8000
+      command: pip install -r requirements.txt && uvicorn main:app --host 0.0.0.0 --port 8000
+      dockerFilePath: backend/Dockerfile
+    env:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    port: 8000
 
-  # Frontend service
   frontend:
     build:
-      src: ./frontend
       command: npm install && npm run build
-      output: dist
-    run:
-      command: npm start
-      port: 3000
+      dockerFilePath: frontend/Dockerfile
+    port: 3000
